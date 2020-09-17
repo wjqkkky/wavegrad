@@ -34,15 +34,37 @@ class AttrDict(dict):
 
 params = AttrDict(
     # Training params
-    batch_size=32,
+    batch_size=1,
     learning_rate=2e-4,
     max_grad_norm=1.0,
 
+    # Audio params
+    num_mels=80,   
+    fft_size=1024,     
+    sample_rate=22050, 
+    win_length=1024,  
+    hop_length=256,    
+    hop_samples=256,  # Don't change this. Really.
+    frame_length_ms=None, 
+    frame_shift_ms=None,  
+    preemphasis=0.98,   
+    min_level_db=-100,  
+    ref_level_db=20,     
+    power=1.5,           
+    griffin_lim_iters=60,
+    stft_pad_mode="reflect",
+    signal_norm=True,    
+    symmetric_norm=True, 
+    max_norm=4.0,       
+    clip_norm=True,  
+    mel_fmin=0.0,      
+    mel_fmax=8000.0,      
+    spec_gain=20.0, 
+    do_trim_silence=False,  
+    trim_db=60,
     # Data params
-    sample_rate=22050,
-    hop_samples=300,  # Don't change this. Really.
+    #sample_rate=22050,
     crop_mel_frames=24,
-
     # Model params
     noise_schedule=np.linspace(1e-6, 0.01, 1000).tolist(),
 )

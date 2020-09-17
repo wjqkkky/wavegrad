@@ -55,6 +55,7 @@ setup(name = 'wavegrad',
         'numpy',
         'torch>=1.6',
         'torchaudio>=0.6.0',
+        'librosa',
         'tqdm'
     ],
     classifiers = CLASSIFIERS)
