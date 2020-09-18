@@ -34,12 +34,12 @@ class AttrDict(dict):
 
 params = AttrDict(
     # Training params
-    batch_size=1,
+    batch_size=30,
     learning_rate=2e-4,
     max_grad_norm=1.0,
 
     # upsample factors
-    # factors=[5, 5, 3, 2, 2], # 5*5*3*2*2=300
+    #factors=[5, 5, 3, 2, 2], # 5*5*3*2*2=300 (hop_lenght=300)
     factors=[4, 4, 4, 2, 2], # 4*4*4*2*2=256 (this is necessary to be equal to hop_lenght)
 
     # Audio params
@@ -66,8 +66,8 @@ params = AttrDict(
     spec_gain=20.0, 
     do_trim_silence=False,  
     trim_db=60,
+
     # Data params
-    #sample_rate=22050,
     crop_mel_frames=24,
     # Model params
     noise_schedule=np.linspace(1e-6, 0.01, 1000).tolist(),

@@ -23,6 +23,27 @@ from tqdm import tqdm
 
 from wavegrad.model import WaveGrad
 
+def set_init_dict(model_dict, checkpoint_state):
+    # Partial initialization: if there is a mismatch with new and old layer, it is skipped.
+    for k, v in checkpoint_state.items():
+        if k not in model_dict:
+            print(" | > Layer missing in the model definition: {}".format(k))
+    # 1. filter out unnecessary keys
+    pretrained_dict = {
+        k: v
+        for k, v in checkpoint_state.items() if k in model_dict
+    }
+    # 2. filter out different size layers
+    pretrained_dict = {
+        k: v
+        for k, v in pretrained_dict.items()
+        if v.numel() == model_dict[k].numel()
+    }
+    # 4. overwrite entries in the existing state dict
+    model_dict.update(pretrained_dict)
+    print(" | > {} / {} layers are restored.".format(len(pretrained_dict),
+                                                     len(model_dict)))
+    return model_dict
 
 def _nested_map(struct, map_fn):
   if isinstance(struct, tuple):
@@ -63,8 +84,17 @@ class WaveGradLearner:
     }
 
   def load_state_dict(self, state_dict):
-    self.model.load_state_dict(state_dict['model'])
-    self.optimizer.load_state_dict(state_dict['optimizer'])
+    try:
+      self.model.load_state_dict(state_dict['model'])
+      self.optimizer.load_state_dict(state_dict['optimizer'])
+      print(" > Total model initialization.")
+    except:
+      print(" > Partial model initialization, and the optimizer was not loaded !")
+      model_dict = self.model.state_dict()
+      model_dict = set_init_dict(model_dict, state_dict['model'])
+      self.model.load_state_dict(model_dict)
+      del model_dict
+
     self.scaler.load_state_dict(state_dict['scaler'])
     self.step = state_dict['step']
 
