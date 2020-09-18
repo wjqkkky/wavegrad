@@ -34,8 +34,8 @@ def _round_up(x, multiple):
 
 def _ls_mse(reference, predicted):
   sr = params.sample_rate
-  hop = params.hop_samples // 2
-  win = params.hop_samples * 4
+  hop = params.hop_length // 2
+  win = params.hop_length * 4
   n_fft = 2**((win-1).bit_length())
   f_max = sr / 2.0
   mel_spec_transform = TT.MelSpectrogram(
@@ -69,7 +69,7 @@ def main(args):
     spec = np.load(f'{filename}.spec.npy')
     audio.append(clip)
     spectrogram.append(spec)
-    max_audio_len = max(max_audio_len, _round_up(len(clip), params.hop_samples))
+    max_audio_len = max(max_audio_len, _round_up(len(clip), params.hop_length))
     max_spec_len = max(max_spec_len, spec.shape[1])
 
   padded_audio = [np.pad(a, [0, max_audio_len - len(a)], mode='constant') for a in audio]

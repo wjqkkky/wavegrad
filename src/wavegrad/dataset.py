@@ -48,7 +48,7 @@ class Collator:
     self.params = params
 
   def collate(self, minibatch):
-    samples_per_frame = self.params.hop_samples
+    samples_per_frame = self.params.hop_length
     for record in minibatch:
       # Filter out records that aren't long enough.
       if len(record['spectrogram']) < self.params.crop_mel_frames:

@@ -57,7 +57,7 @@ def transform(filename):
     raise ValueError(f'Invalid sample rate {sr}.')
   audio = torch.clamp(audio[0] / 32767.5, -1.0, 1.0)
 
-  #hop = params.hop_samples
+  #hop = params.hop_length
   #win = hop * 4
   #n_fft = 2**((win-1).bit_length())
   #f_max = sr / 2.0

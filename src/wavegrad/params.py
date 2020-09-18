@@ -38,13 +38,17 @@ params = AttrDict(
     learning_rate=2e-4,
     max_grad_norm=1.0,
 
+    # upsample factors
+    # factors=[5, 5, 3, 2, 2], # 5*5*3*2*2=300
+    factors=[4, 4, 4, 2, 2], # 4*4*4*2*2=256 (this is necessary to be equal to hop_lenght)
+
     # Audio params
     num_mels=80,   
     fft_size=1024,     
     sample_rate=22050, 
     win_length=1024,  
-    hop_length=256,    
-    hop_samples=256,  # Don't change this. Really.
+    hop_length=256, # if you change that change factors
+
     frame_length_ms=None, 
     frame_shift_ms=None,  
     preemphasis=0.98,   

@@ -50,7 +50,7 @@ def predict(spectrogram, model_dir=None, params=None, device=torch.device('cuda'
       spectrogram = spectrogram.unsqueeze(0)
     spectrogram = spectrogram.to(device)
 
-    audio = torch.randn(spectrogram.shape[0], model.params.hop_samples * spectrogram.shape[-1], device=device)
+    audio = torch.randn(spectrogram.shape[0], model.params.hop_length * spectrogram.shape[-1], device=device)
     noise_scale = torch.from_numpy(alpha_cum**0.5).float().unsqueeze(1).to(device)
 
     for n in range(len(alpha) - 1, -1, -1):
