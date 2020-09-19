@@ -52,8 +52,8 @@ class Collator:
     for record in minibatch:
       # Filter out records that aren't long enough.
       if len(record['spectrogram']) < self.params.crop_mel_frames:
-        del record['spectrogram']
-        del record['audio']
+        record['spectrogram'] = None
+        record['audio'] = None
         continue
 
       start = random.randint(0, record['spectrogram'].shape[0] - self.params.crop_mel_frames)

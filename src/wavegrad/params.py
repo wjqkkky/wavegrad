@@ -48,7 +48,7 @@ params = AttrDict(
     sample_rate=22050, 
     win_length=1024,  
     hop_length=256, # if you change that change factors
-
+    
     frame_length_ms=None, 
     frame_shift_ms=None,  
     preemphasis=0.98,   
