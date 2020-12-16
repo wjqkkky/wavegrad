@@ -34,7 +34,7 @@ class AttrDict(dict):
 
 params = AttrDict(
     # Training params
-    batch_size=50,
+    batch_size=64, # total batch size, set to integer multiples of GPU num
     learning_rate=2e-4,
     max_grad_norm=1.0,
 
