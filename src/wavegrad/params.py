@@ -56,7 +56,7 @@ params = AttrDict(
     ref_level_db=20,     
     power=1.5,           
     griffin_lim_iters=60,
-    stft_pad_mode="reflect",
+    stft_pad_mode="constant",
     signal_norm=True,    
     symmetric_norm=True, 
     max_norm=4.0,       
@@ -64,8 +64,8 @@ params = AttrDict(
     mel_fmin=0.0,      
     mel_fmax=8000.0,      
     spec_gain=20.0, 
-    do_trim_silence=False,  
-    trim_db=60,
+    do_trim_silence=True,
+    trim_db=30,
 
     # Data params
     crop_mel_frames=24,
