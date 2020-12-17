@@ -38,7 +38,7 @@ def predict(spectrogram, model_dir=None, params=None, device=torch.device('cuda'
 		new_state_dict = {}
 		for key in state_dict:
 			new_state_dict[key.replace("module.", "")] = state_dict[key]
-		model.load_state_dict(checkpoint['model'])
+		model.load_state_dict(new_state_dict)
 		model.eval()
 		models[model_dir] = model
 
