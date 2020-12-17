@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
+import time
 
 import numpy as np
 import os
@@ -26,7 +27,7 @@ from wavegrad.model import WaveGrad
 models = {}
 
 
-def predict(spectrogram, model_dir=None, params=None, device=torch.device('cuda')):
+def load_model(model_dir, params=None, device=torch.device('cuda')):
 	# Lazy load model.
 	if not model_dir in models:
 		if os.path.exists(f'{model_dir}/weights.pt'):
@@ -44,6 +45,10 @@ def predict(spectrogram, model_dir=None, params=None, device=torch.device('cuda'
 
 	model = models[model_dir]
 	model.params.override(params)
+	return model
+
+
+def predict(spectrogram, model, device=torch.device('cuda')):
 	with torch.no_grad():
 		beta = np.array(model.params.noise_schedule)
 		alpha = 1 - beta
@@ -70,13 +75,25 @@ def predict(spectrogram, model_dir=None, params=None, device=torch.device('cuda'
 
 
 def main(args):
-	spectrogram = torch.load(args.spectrogram_path)
 	# spectrogram = torch.from_numpy(np.load(args.spectrogram_path))
 	params = {}
 	if args.noise_schedule:
 		params['noise_schedule'] = torch.from_numpy(np.load(args.noise_schedule))
-	audio, sr = predict(spectrogram, model_dir=args.model_dir, params=params)
-	torchaudio.save(args.output, audio.cpu(), sample_rate=sr)
+	start_time = time.time()
+	model = load_model(model_dir=args.model_dir, params=params)
+	time_consuming = time.time() - start_time
+	print(" > Load model, time consuming {}s".format(round(time_consuming, 2)))
+	mels = os.listdir(args.spectrogram_path)
+	for mel_file in mels:
+		if not os.path.isdir(mel_file) and mel_file[:-2] == "pt":
+			start_time = time.time()
+			print(" > Start inferencing sentence {} . ".format(mel_file))
+			spectrogram = torch.tensor(torch.load(os.path.join(args.spectrogram_path, mel_file)))
+			audio, sr = predict(spectrogram, model)
+			wav_name = os.path.join(args.output, mel_file[:-7] + "_wg.wav")
+			torchaudio.save(wav_name, audio.cpu(), sample_rate=sr)
+			time_consuming = time.time() - start_time
+			print(" > Complete, time consuming {}s".format(round(time_consuming, 2)))
 
 
 if __name__ == '__main__':
