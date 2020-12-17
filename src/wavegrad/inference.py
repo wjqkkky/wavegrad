@@ -85,7 +85,7 @@ def main(args):
 	print(" > Load model, time consuming {}s".format(round(time_consuming, 2)))
 	mels = os.listdir(args.spectrogram_path)
 	for mel_file in mels:
-		if not os.path.isdir(mel_file) and mel_file[:-2] == "pt":
+		if not os.path.isdir(mel_file) and mel_file[-2:] == "pt":
 			start_time = time.time()
 			print(" > Start inferencing sentence {} . ".format(mel_file))
 			spectrogram = torch.tensor(torch.load(os.path.join(args.spectrogram_path, mel_file)))
